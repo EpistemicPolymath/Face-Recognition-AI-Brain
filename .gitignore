@@ -341,4 +341,7 @@ buck-out/
 .buckversion
 .fakebuckversion
 
-# End of https://www.gitignore.io/api/node,reactnative
+
+# End of https://www.gitignore.io/api/node,reactnativeenv.json
+# Envar
+src/env.json
