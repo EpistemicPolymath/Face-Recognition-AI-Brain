@@ -7,9 +7,10 @@ import Navigation from './components/Navigation/Navigation.js';
 import Logo from './components/Logo/Logo.js';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import Rank from './components/Rank/Rank.js';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
 // React-Particles-JS
 import Particles from 'react-particles-js';
-// Global Environmental Variables for API
+// Global Environmental Variables for API - For Privacy
 import env from './env.json';
 const apikey = env['apikey'];
 //Clarifai Initialization
@@ -48,23 +49,24 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      input: '' /* What the user will input */
+      input: '', /* What the user will input */
+      imgUrl: '' /* The user's inputed image URL */
     }
   }
 
   onInputChange = (event) => {
-    console.log(event.target.value);
+    this.setState({input: event.target.value});
   }
 
   onButtonSubmit = (event) => {
-    console.log('click');
+    this.setState({imgUrl: this.state.input});
     app.models.predict(
-        Clarifai.COLOR_MODEL,
+        Clarifai.FACE_DETECT_MODEL,
         // URL
-        "https://samples.clarifai.com/metro-north.jpg")
+        this.state.input)
   .then(function(response) {
         // do something with response
-      console.log(response);
+      console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
       },
       function(err) {
         // there was an error
@@ -84,8 +86,7 @@ class App extends Component {
          <ImageLinkForm
            onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
          />
-         {/*
-        <FaceRecognition />*/}
+        <FaceRecognition imgUrl={this.state.imgUrl}/>
       </div>
     );
   }
