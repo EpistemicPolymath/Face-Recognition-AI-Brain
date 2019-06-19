@@ -8,6 +8,7 @@ import Logo from './components/Logo/Logo.js';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import Rank from './components/Rank/Rank.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
+import SignIn from './components/SignIn/SignIn.js';
 // React-Particles-JS
 import Particles from 'react-particles-js';
 // Global Environmental Variables for API - For Privacy
@@ -51,7 +52,8 @@ class App extends Component {
     this.state = {
       input: '', /* What the user will input */
       imgUrl: '', /* The user's inputed image URL */
-      box: {} /* Refers to the bounding_box data from Clarifai */
+      box: {}, /* Refers to the bounding_box data from Clarifai */
+      route: 'signin' /* Keeps track of the active page */
     }
   }
 
@@ -87,6 +89,10 @@ class App extends Component {
   .catch(error => console.log(error));
   }
 
+  onRouteChange = () => {
+    this.setState({route: 'home'});
+  }
+
   render() {
     return (
       <div className="App">
@@ -94,14 +100,20 @@ class App extends Component {
                 params={particlesOptions}
               />
           <Navigation />
-          <Logo />
-          <Rank />
-         <ImageLinkForm
-           onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
-         />
-        <FaceRecognition
-          box={this.state.box}
-          imgUrl={this.state.imgUrl}/>
+          { this.state.route === 'signin' ?
+          <SignIn onRouteChange={this.onRouteChange}/>
+            : <div>
+                <Logo />
+                <Rank />
+               <ImageLinkForm
+                 onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
+               />
+               <FaceRecognition
+                 box={this.state.box}
+                 imgUrl={this.state.imgUrl}
+               />
+             </div>
+        }
       </div>
     );
   }
