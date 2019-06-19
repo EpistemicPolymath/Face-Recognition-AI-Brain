@@ -54,7 +54,8 @@ class App extends Component {
       input: '', /* What the user will input */
       imgUrl: '', /* The user's inputed image URL */
       box: {}, /* Refers to the bounding_box data from Clarifai */
-      route: 'signin' /* Keeps track of the active page */
+      route: 'signin', /* Keeps track of the active page */
+      isSignedIn: false /* Is the user signed in? */
     }
   }
 
@@ -92,6 +93,12 @@ class App extends Component {
 
 /* Dynamically Setup routing */
   onRouteChange = (route) => {
+    // isSignedIn Setup
+    if(route === 'signout') {
+      this.setState({isSignedIn: false});
+    } else if (route === 'home') {
+      this.setState({isSignedIn: true});
+    }
     this.setState({route: route});
   }
 
@@ -116,7 +123,7 @@ class App extends Component {
            </div>
         )
       default:
-      return null;
+      return <SignIn onRouteChange={this.onRouteChange}/>;
     }
   }
 
@@ -126,7 +133,10 @@ class App extends Component {
         <Particles className="particles"
                 params={particlesOptions}
               />
-          <Navigation onRouteChange={this.onRouteChange}/>
+          <Navigation
+            isSignedIn={this.state.isSignedIn}
+            onRouteChange={this.onRouteChange}
+          />
           {this.appContent()}
       </div>
     );
