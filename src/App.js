@@ -103,7 +103,9 @@ class App extends Component {
   }
 
   appContent = () => {
-    switch(this.state.route) {
+    // Destructuring
+    const { imgUrl, route, box } = this.state;
+    switch(route) {
       case 'signin':
         return <SignIn onRouteChange={this.onRouteChange}/>
       case 'register':
@@ -117,8 +119,8 @@ class App extends Component {
                onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
              />
              <FaceRecognition
-               box={this.state.box}
-               imgUrl={this.state.imgUrl}
+               box={box}
+               imgUrl={imgUrl}
              />
            </div>
         )
@@ -128,13 +130,15 @@ class App extends Component {
   }
 
   render() {
+    // Destructuring
+    const { isSignedIn } = this.state;
     return (
       <div className="App">
         <Particles className="particles"
                 params={particlesOptions}
               />
           <Navigation
-            isSignedIn={this.state.isSignedIn}
+            isSignedIn={isSignedIn}
             onRouteChange={this.onRouteChange}
           />
           {this.appContent()}
