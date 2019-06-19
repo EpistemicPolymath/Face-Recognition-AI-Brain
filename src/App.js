@@ -9,6 +9,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
 import Rank from './components/Rank/Rank.js';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
 import SignIn from './components/SignIn/SignIn.js';
+import Register from './components/Register/Register.js';
 // React-Particles-JS
 import Particles from 'react-particles-js';
 // Global Environmental Variables for API - For Privacy
@@ -89,8 +90,34 @@ class App extends Component {
   .catch(error => console.log(error));
   }
 
-  onRouteChange = () => {
-    this.setState({route: 'home'});
+/* Dynamically Setup routing */
+  onRouteChange = (route) => {
+    this.setState({route: route});
+  }
+
+  appContent = () => {
+    switch(this.state.route) {
+      case 'signin':
+        return <SignIn onRouteChange={this.onRouteChange}/>
+      case 'register':
+        return <Register onRouteChange={this.onRouteChange}/>
+      case 'home':
+        return (
+          <div>
+              <Logo />
+              <Rank />
+             <ImageLinkForm
+               onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
+             />
+             <FaceRecognition
+               box={this.state.box}
+               imgUrl={this.state.imgUrl}
+             />
+           </div>
+        )
+      default:
+      return null;
+    }
   }
 
   render() {
@@ -99,21 +126,8 @@ class App extends Component {
         <Particles className="particles"
                 params={particlesOptions}
               />
-          <Navigation />
-          { this.state.route === 'signin' ?
-          <SignIn onRouteChange={this.onRouteChange}/>
-            : <div>
-                <Logo />
-                <Rank />
-               <ImageLinkForm
-                 onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
-               />
-               <FaceRecognition
-                 box={this.state.box}
-                 imgUrl={this.state.imgUrl}
-               />
-             </div>
-        }
+          <Navigation onRouteChange={this.onRouteChange}/>
+          {this.appContent()}
       </div>
     );
   }
