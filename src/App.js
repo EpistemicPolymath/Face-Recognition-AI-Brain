@@ -55,8 +55,26 @@ class App extends Component {
       imgUrl: '', /* The user's inputed image URL */
       box: {}, /* Refers to the bounding_box data from Clarifai */
       route: 'signin', /* Keeps track of the active page */
-      isSignedIn: false /* Is the user signed in? */
+      isSignedIn: false, /* Is the user signed in? */
+      user: { /* User Profile */
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
+  }
+
+// Loads new users information into the Front-End
+  loadUser = (newUser) => {
+    this.setState({user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        entries: newUser.entries,
+        joined: newUser.joined
+    }})
   }
 
   calculateFaceLocation = (data) => {
@@ -107,14 +125,15 @@ class App extends Component {
     const { imgUrl, route, box } = this.state;
     switch(route) {
       case 'signin':
-        return <SignIn onRouteChange={this.onRouteChange}/>
+        return <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
       case 'register':
-        return <Register onRouteChange={this.onRouteChange}/>
+        return <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}
+        />
       case 'home':
         return (
           <div>
               <Logo />
-              <Rank />
+              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
              <ImageLinkForm
                onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}
              />
