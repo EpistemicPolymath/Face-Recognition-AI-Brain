@@ -46,24 +46,27 @@ particles: {
  }
 }
 
+// Initial State for the Application
+const initialState = {
+  input: '', /* What the user will input */
+  imgUrl: '', /* The user's inputed image URL */
+  box: {}, /* Refers to the bounding_box data from Clarifai */
+  route: 'signin', /* Keeps track of the active page */
+  isSignedIn: false, /* Is the user signed in? */
+  user: { /* User Profile */
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  }
+}
+
 class App extends Component {
 
   constructor() {
     super();
-    this.state = {
-      input: '', /* What the user will input */
-      imgUrl: '', /* The user's inputed image URL */
-      box: {}, /* Refers to the bounding_box data from Clarifai */
-      route: 'signin', /* Keeps track of the active page */
-      isSignedIn: false, /* Is the user signed in? */
-      user: { /* User Profile */
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
-    }
+    this.state = initialState;
   }
 
 // Loads new users information into the Front-End
@@ -120,6 +123,7 @@ class App extends Component {
         .then(count => {
           this.setState(Object.assign(this.state.user, {entries: count}));
         })
+        .catch(console.log)
     }
   this.displayFaceBox(this.calculateFaceLocation(response))
   })
@@ -130,7 +134,7 @@ class App extends Component {
   onRouteChange = (route) => {
     // isSignedIn Setup
     if(route === 'signout') {
-      this.setState({isSignedIn: false});
+      this.setState(initialState);
     } else if (route === 'home') {
       this.setState({isSignedIn: true});
     }
