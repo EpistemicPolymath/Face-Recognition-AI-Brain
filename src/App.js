@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-// Clarifai
-import Clarifai from 'clarifai';
 // Components
 import Navigation from './components/Navigation/Navigation.js';
 import Logo from './components/Logo/Logo.js';
@@ -12,13 +10,6 @@ import SignIn from './components/SignIn/SignIn.js';
 import Register from './components/Register/Register.js';
 // React-Particles-JS
 import Particles from 'react-particles-js';
-// Global Environmental Variables for API - For Privacy
-import env from './env.json';
-const apikey = env['apikey'];
-//Clarifai Initialization
-const app = new Clarifai.App ({
-    apiKey: apikey
-});
 
 // https://www.npmjs.com/package/react-particles-js
 // https://vincentgarreau.com/particles.js/
@@ -104,30 +95,35 @@ class App extends Component {
 
   onImageSubmit = (event) => {
     this.setState({imgUrl: this.state.input});
-    app.models.predict(
-        Clarifai.FACE_DETECT_MODEL,
-        // URL
-        this.state.input)
-  .then(response => {
-    // As long as we have a response from the API
-    if (response) {
-      // Increment Image Entries at Endpoint
-      fetch('http://localhost:3000/image', {
-        method: 'put',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            id: this.state.user.id
-        })
+    // Fetch imageurl endpoint and send ImgURL
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+          input: this.state.input
       })
-        .then(response => response.json())
-        .then(count => {
-          this.setState(Object.assign(this.state.user, {entries: count}));
+    }) 
+    .then(response => response.json())
+    .then(response => {
+      // As long as we have a response from the API
+      if (response) {
+        // Increment Image Entries at Endpoint
+        fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+              id: this.state.user.id
+          })
         })
-        .catch(console.log)
-    }
-  this.displayFaceBox(this.calculateFaceLocation(response))
-  })
-  .catch(error => console.log(error));
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, {entries: count}));
+          })
+          .catch(console.log)
+      }
+    this.displayFaceBox(this.calculateFaceLocation(response))
+    })
+    .catch(error => console.log(error));
   }
 
 /* Dynamically Setup routing */

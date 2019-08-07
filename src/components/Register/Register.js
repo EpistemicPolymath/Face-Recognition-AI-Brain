@@ -36,7 +36,7 @@ onSubmitRegister = () => {
     .then(response => response.json())
     .then(user => {
       // If we successfully create a new user
-        if (user) {
+        if (user.id) {
             this.props.loadUser(user);
             this.props.onRouteChange('home');
         }
