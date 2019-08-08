@@ -96,19 +96,19 @@ class App extends Component {
   onImageSubmit = (event) => {
     this.setState({imgUrl: this.state.input});
     // Fetch imageurl endpoint and send ImgURL
-    fetch('http://localhost:3000/imageurl', {
+    fetch('https://afternoon-savannah-53539.herokuapp.com/imageurl', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
           input: this.state.input
       })
-    }) 
+    })
     .then(response => response.json())
     .then(response => {
       // As long as we have a response from the API
       if (response) {
         // Increment Image Entries at Endpoint
-        fetch('http://localhost:3000/image', {
+        fetch('https://afternoon-savannah-53539.herokuapp.com:3000/image', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
