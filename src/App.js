@@ -108,7 +108,7 @@ class App extends Component {
       // As long as we have a response from the API
       if (response) {
         // Increment Image Entries at Endpoint
-        fetch('https://afternoon-savannah-53539.herokuapp.com:3000/image', {
+        fetch('https://afternoon-savannah-53539.herokuapp.com/image', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
